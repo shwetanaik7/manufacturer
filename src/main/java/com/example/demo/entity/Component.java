@@ -1,22 +1,15 @@
 package com.example.demo.entity;
 
-
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 public class Component {
@@ -35,19 +28,19 @@ public class Component {
 	
 	String supplier;
 	
-	@ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                CascadeType.PERSIST,
-                CascadeType.MERGE
-            },
-            mappedBy = "component")
-	Set<Product> product = new HashSet<>();
+	 @ManyToOne(fetch = FetchType.LAZY, optional = false)
+	    @JoinColumn(name = "product_id", nullable = false)
+	    @OnDelete(action = OnDeleteAction.CASCADE)
+	    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="product_id")
+	    @JsonIdentityReference(alwaysAsId=true)
+	    @JsonProperty("product_id")
+	    private Product product;
 
-	public Set<Product> getProduct() {
+	public Product getProduct() {
 		return product;
 	}
 
-	public void setProduct(Set<Product> product) {
+	public void setProduct(Product product) {
 		this.product = product;
 	}
 

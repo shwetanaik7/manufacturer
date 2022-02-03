@@ -1,12 +1,8 @@
 package com.example.demo.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
 import org.hibernate.validator.constraints.Range;
 
 @Entity
@@ -21,24 +17,6 @@ public class Product {
 	
 	@Range(min=1)
 	Integer quantity;
-	
-	@ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                CascadeType.PERSIST,
-                CascadeType.MERGE
-            })
-	@JoinTable(name = "product_component",
-    joinColumns = { @JoinColumn(name = "product_id") },
-    inverseJoinColumns = { @JoinColumn(name = "component_id") })
-	Set<Component> component = new HashSet<>();
-
-	public Set<Component> getComponent() {
-		return component;
-	}
-
-	public void setComponent(Set<Component> component) {
-		this.component = component;
-	}
 
 	public Integer getProduct_id() {
 		return product_id;
