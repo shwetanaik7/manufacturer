@@ -1,5 +1,8 @@
 package com.example.demo.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -16,25 +19,37 @@ public class Component {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Integer component_id;
-	
+
 	@NotBlank
 	@NotEmpty
-	@Size(max=25)
+	@Size(max = 25)
 	String component_name;
-	
+
 	@NotBlank
-	@Size(max=50)
+	@Size(max = 50)
 	String description;
+
+	String supplier_name;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "product_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "product_id")
+	@JsonIdentityReference(alwaysAsId = true)
+	@JsonProperty("product_id")
+	private Product product;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "component_supplier", joinColumns = @JoinColumn(name = "component_id"), inverseJoinColumns = @JoinColumn(name = "suppler_id"))
+	private Set<Supplier> supplierSet = new HashSet<>();
 	
-	String supplier;
-	
-	 @ManyToOne(fetch = FetchType.LAZY, optional = false)
-	    @JoinColumn(name = "product_id", nullable = false)
-	    @OnDelete(action = OnDeleteAction.CASCADE)
-	    @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="product_id")
-	    @JsonIdentityReference(alwaysAsId=true)
-	    @JsonProperty("product_id")
-	    private Product product;
+	public Set<Supplier> getSupplierSet() {
+		return supplierSet;
+	}
+
+	public void setSupplierSet(Set<Supplier> supplierSet) {
+		this.supplierSet = supplierSet;
+	}
 
 	public Product getProduct() {
 		return product;
@@ -68,12 +83,12 @@ public class Component {
 		this.description = description;
 	}
 
-	public String getSupplier() {
-		return supplier;
+	public String getSupplier_name() {
+		return supplier_name;
 	}
 
-	public void setSupplier(String supplier) {
-		this.supplier = supplier;
+	public void setSupplier_name(String supplier_name) {
+		this.supplier_name = supplier_name;
 	}
-	
+
 }

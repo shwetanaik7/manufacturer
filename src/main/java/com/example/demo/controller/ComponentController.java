@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,17 +20,23 @@ import com.example.demo.service.ComponentService;
 public class ComponentController {
 	@Autowired
 	ComponentService componentService;
-	
+
 	@Autowired
 	ProductRepository productRepository;
 	@Autowired
 	ComponentRepository componentRepository;
 
 	@PostMapping("/component/{id}")
-	public Component addComponent(@PathVariable (value = "id") Integer id, @Valid @RequestBody Component component) {
+	public Component addComponent(@PathVariable(value = "id") Integer id, @Valid @RequestBody Component component) {
 		return productRepository.findById(id).map(product -> {
 			component.setProduct(product);
 			return componentRepository.save(component);
 		}).orElseThrow(() -> new ResourceNotFoundException("id " + id + " not found"));
+	}
+	
+	@PostMapping("/comp/{id}")
+	public List<Component> saveBook(@RequestBody List<Component> componentList, Integer id) {
+		List<Component> compResponse = (List<Component>) componentService.saveBook(componentList, id);
+		return compResponse;
 	}
 }
