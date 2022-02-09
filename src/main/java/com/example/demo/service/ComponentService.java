@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,14 @@ public class ComponentService {
 
 		List<Component> compResponse = (List<Component>) componentRepository.saveAll(componentList);
 		return compResponse;
+	}
+
+	public Iterable<Component> getComponents() {
+		return componentRepository.findAll();
+	}
+
+	public Optional<Component> getComponents(Integer id) {
+		return componentRepository.findById(id);
 	}
 
 }

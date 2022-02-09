@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
 import java.util.List;
-
+import java.util.Optional;
 import javax.validation.Valid;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,5 +37,15 @@ public class ComponentController {
 	public List<Component> saveBook(@RequestBody List<Component> componentList, Integer id) {
 		List<Component> compResponse = (List<Component>) componentService.saveBook(componentList, id);
 		return compResponse;
+	}
+	
+	@GetMapping("/comp")
+	Iterable<Component> getComponents() {
+		return componentService.getComponents();
+	}
+	
+	@GetMapping("/comp/{id}")
+	Optional<Component> getComponents(@PathVariable("id") Integer id) {
+		return componentService.getComponents(id);
 	}
 }
